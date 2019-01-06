@@ -30,23 +30,23 @@ $ cp dotenv .env
 ```
 Specify your app client id and client secret as well as account login credentials to the .env file.
 
-- How to send SMS
+#### How to send SMS
 ```
 $ python send-sms.py
 ```
-- How to send MMS
+#### How to send MMS
 ```
 $ python send-mms.py
 ```
-- How to track delivery status of messages
+#### How to track delivery status of messages
 ```
 $ python tract-status.py
 ```
-- How to retrieve and modify message history
+#### How to retrieve and modify message history
 ```
 $ python retrieve-modify.py
 ```
-- How to receive and reply to SMS messages
+#### How to receive and reply to SMS messages
 ```
 $ python receive-reply.py
 ```
