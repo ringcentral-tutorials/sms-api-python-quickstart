@@ -1,4 +1,4 @@
-# SMS API PHP Quickstart
+# SMS API Python Quickstart
 
 [![Community][community-img]][community-url]
 [![Twitter][twitter-img]][twitter-url]
