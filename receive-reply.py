@@ -14,29 +14,20 @@ def main():
     if os.getenv("ENVIRONMENT_MODE") == "sandbox":
         sdk = SDK(os.getenv("CLIENT_ID_SB"), os.getenv("CLIENT_SECRET_SB"), 'https://platform.devtest.ringcentral.com')
         platform = sdk.platform()
-        fromNumber = os.getenv("USERNAME_SB")
         platform.login(os.getenv("USERNAME_SB"), '', os.getenv("PASSWORD_SB"))
+        fromNumber = os.getenv("USERNAME_SB")
     else:
         sdk = SDK(os.getenv("CLIENT_ID_PROD"), os.getenv("CLIENT_SECRET_PROD"), 'https://platform.ringcentral.com')
         platform = sdk.platform()
-        fromNumber = os.getenv("USERNAME_PROD")
         platform.login(os.getenv("USERNAME_PROD"), '', os.getenv("PASSWORD_PROD"))
-
-    def on_message(msg):
-        sender = msg['body']['from']['phoneNumber']
-        response = platform.post('/account/~/extension/~/sms', {
-             'from' : {'phoneNumber' : fromNumber},
-             'to' : [{'phoneNumber' : sender}],
-             'text' : 'This is an automatic reply'
-        })
-        print('SMS replied: %d' % (response.json().id))
+        fromNumber = os.getenv("USERNAME_PROD")
 
     def pubnub():
         try:
-            s = sdk.create_subscription()
-            s.add_events(['/account/~/extension/~/message-store/instant?type=SMS'])
-            s.on(Events.notification, on_message)
-            res = s.register()
+            subscription = sdk.create_subscription()
+            subscription.add_events(['/account/~/extension/~/message-store/instant?type=SMS'])
+            subscription.on(Events.notification, on_message)
+            res = subscription.register()
             try:
                 f = open("subid.txt", "w")
                 print (res.json().id)
@@ -49,6 +40,15 @@ def main():
 
         except KeyboardInterrupt:
             print("Pubnub listener stopped...")
+
+    def on_message(msg):
+        senderNumber = msg['body']['from']['phoneNumber']
+        response = platform.post('/account/~/extension/~/sms', {
+             'from' : {'phoneNumber' : fromNumber},
+             'to' : [{'phoneNumber' : senderNumber}],
+             'text' : 'This is an automatic reply'
+        })
+        print('SMS replied: %d' % (response.json().id))
 
     def unregister():
         try:

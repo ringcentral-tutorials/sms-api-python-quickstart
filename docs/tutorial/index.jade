@@ -1,230 +1,253 @@
 .chapter(data-title='SMS API Python Quickstart')
-  .step(data-title='Welcome!', data-file='../README.MD')
+  .step(data-title='Welcome!', data-file='../README.md'  data-highlight='11-17')
     h2 Welcome to SMS API Python Quickstart
 
     p This is a quickstart tutorial to teach users to use RingCentral SMS API.
 
-  .step(data-title='Environment Variables', data-file='../README')
+  .step(data-title='Clone and Setup the project', data-file='../README.md' data-highlight='21-29')
     :markdown
-      ### Clone the project
+      ### Clone and Setup the project
       Clone the project from GitHub and install RingCentral SDK and dependencies.
 
   .step(data-title='Environment Variables', data-file='../dotenv')
     :markdown
-      ## Environment Variables
+     ### Set environment parameters
+     ```
+     $ cp dotenv .env
+     ```
+     Add your app client id and client secret as well as account login credentials to the .env file.
+     * __Note__: The username is the account number and it is also the phone number we will use to send SMS/MMS from. If you want to use another number under this account, you can create a new variable and specify the phone number and use that number for sending SMS/MMS instead.
 
-      The first file we'll look at is `.env.sample`. This contains all the environment variables we used in this tutorial. You need to follow its sample to create `.env` file which contains real RingCentral credentials.
+  .step(data-title='Authentication', data-file='../authentication.py')
+    :markdown
+     ### Authentication
+     ---
+     Let's create a file `authentication.py`, import the RingCentral Python SDK and other utility libs
 
-      Most of the environment variables are quite self-explanatory except the last one: `RINGCENTRAL_RECEIVER`. It means the number to receive SMS. You can set it to your own mobile phone number so that you can confirm the receipt of SMS.
+     We will load the environment variables from `.env` file and implement RingCentral authentication.
+
+     In this module we implement 3 utility functions:
+     * `get_sdk():` returns the `sdk` instance instantiated using our client id and secret.
+
+     * `get_platform():` performs the password flow login and returns the `platform` instance, which we can use to call RingCentral APIs.
+
+     * `get_phonenumber():` returns the 'username' we specified in the __.env__ file and use it as the phone number for sending SMS/MMS message.
+
 
 .chapter(data-title='Send SMS')
-  .step(data-title='Send SMS - 1', data-file='../send-sms.php')
+  .step(data-title='Send SMS - 1', data-file='../send-sms.py', data-highlight='1-1')
     :markdown
-      ## Send SMS - 1
+     ### Send SMS - 1
+     ---
+     Create a file `send-sms.py` and import the `authentication.py` module.
 
-      ---
-
-      #### Create file `send-sms.php` for SMS sending
-
-  .step(data-title='Send SMS - 2', data-file='../send-sms.php', data-highlight='7-8')
+  .step(data-title='Send SMS - 2', data-file='../send-sms.py', data-highlight='4-14')
     :markdown
-      ## Send SMS - 2
+     ### Send SMS - 2
+     ---
+     Define the `params` parameter and specify the _from, to_ and the _text_ parameters.
 
-      ---
+     Get the `platform` instance from the `authentication.get_platform()` function.
 
-      #### Load environment variables from `.env` file
+     Call the `platform.post()` function to send the SMS message.
 
-  .step(data-title='Send SMS - 3', data-file='../send-sms.php', data-highlight='10-10')
+     Print the sent SMS message id from the response.
+
+  .step(data-title='Send SMS - 3', data-file='../send-sms.py', data-highlight='17-19')
     :markdown
-      ## Send SMS - 3
-
+      ### Send SMS - 3
       ---
+      Specify the recipient's phone number and the text message.
 
-      #### Initialize RingCentral SDK
+      Call the `send_sms_message(toNumber, message)` function to send the message.
 
-  .step(data-title='Send SMS - 4', data-file='../send-sms.php', data-highlight='14-14')
-    :markdown
-      ## Send SMS - 4
-
-      ---
-
-      #### Login via password
-
-  .step(data-title='Send SMS - 5', data-file='../send-sms.php', data-highlight='16-22')
-    :markdown
-      ## Send SMS - 5
-
-      ---
-
-      #### Send SMS
-
-  .step(data-title='Send SMS - 6', data-file='../send-sms.php', data-highlight='24-24')
-    :markdown
-      ## Send SMS - 6
-
-      ---
-
-      #### Print SMS id
+      ### Run the demo
+      $ python send_sms.py
 
 .chapter(data-title='Send MMS')
-  .step(data-title='Send MMS - 1', data-file='../send-mms.php')
+  .step(data-title='Send MMS - 1', data-file='../send-mms.py', data-highlight='1-1')
     :markdown
-      ## Send MMS - 1
-
+      ### Send MMS - 1
       ---
+      Create a file `send-mms.py` and import the `authentication.py` module.
 
-      #### Create file `send-mms.php` for MMS sending
-
-  .step(data-title='Send MMS - 2', data-file='../send-mms.php', data-highlight='16-16')
+  .step(data-title='Send MMS - 2', data-file='../send-mms.py', data-highlight='4-5')
     :markdown
-      ## Send MMS - 2
-
+      ### Send MMS - 2
       ---
+      Get the SDK instance and create a multipart builder
 
-      #### Create a multipart builder
-
-  .step(data-title='Send MMS - 3', data-file='../send-mms.php', data-highlight='17-23')
+  .step(data-title='Send MMS - 3', data-file='../send-mms.py', data-highlight='6-11')
     :markdown
-      ## Send MMS - 3
-
+      ### Send MMS - 3
       ---
+      Build the MMS message body
 
-      #### Add request body to multipart builder
 
-  .step(data-title='Send MMS - 4', data-file='../send-mms.php', data-highlight='24-24')
+  .step(data-title='Send MMS - 4', data-file='../send-mms.py', data-highlight='13-16')
     :markdown
-      ## Send MMS - 4
-
+      ### Send MMS - 4
       ---
+      Use the `builder` to create a `request`
 
-      #### Add an image to multipart builder
+      Get the `platform` instance and send the request
 
-  .step(data-title='Send MMS - 5', data-file='../send-mms.php', data-highlight='25-27')
+      Print MMS message id from the response.
+
+
+  .step(data-title='Send MMS - 5', data-file='../send-mms.py', data-highlight='21-25')
     :markdown
-      ## Send MMS - 5
-
+      ### Send SMS - 5
       ---
+      Create MMS attachment, specify the recipient's phone number and the text message.
 
-      #### Send the MMS
+      Call the `send_mms_message(toNumber, attachment, message)` to send the message.
 
-      #### You can see that MMS and SMS share the same API endpoint: `/account/~/extension/~/sms`
-
-  .step(data-title='Send MMS - 6', data-file='../send-mms.php', data-highlight='29-29')
-    :markdown
-      ## Send MMS - 6
-
-      ---
-
-      #### Print the MMS id
+      ### Run the demo
+      $ python send_mms.py
 
 .chapter(data-title='How to track delivery status of messages')
-  .step(data-title='How to track delivery status of messages - 1', data-file='../track-status.php')
+  .step(data-title='Track delivery status of messages - 1', data-file='../track-status.py', data-highlight='1')
     :markdown
-      ## How to track delivery status of messages - 1
-
+      ### Track delivery status of messages - 1
       ---
+      Create a file `track-status.py` and import the `authentication.py` module.
 
-      #### Create file `track-status.php` for message status tracking.
-
-  .step(data-title='How to track delivery status of messages - 2', data-file='../track-status.php', data-highlight='24-26')
+  .step(data-title='Track delivery status of messages - 2', data-file='../track-status.py', data-highlight='18-24')
     :markdown
-      ## How to track delivery status of messages - 2
-
+      ### Track delivery status of messages - 2
       ---
+      We reuse the codes for sending MMS.
 
-      #### If everything goes well, code highlighted on the right will print `Delivered`.
+      We add a few lines to track the delivery status.
 
-.chapter(data-title='How to retrieve and modify message history')
-  .step(data-title='How to retrieve and modify message history - 1', data-file='../retrieve-modify.php')
+      If everything goes well, code highlighted on the right will print `Message was sent successfully`. Otherwise it will print an error status.
+
+      ### Run the demo
+      $ python send_sms.py
+
+.chapter(data-title='How to retrieve and modify message read status')
+  .step(data-title='How to retrieve and modify message read status - 1', data-file='../retrieve-modify.py', data-highlight='1')
     :markdown
-      ## How to retrieve and modify message history - 1
-
+      ### Retrieve and modify message read status - 1
       ---
+      Create a file `retrieve-modify.py` and import the `authentication.py` module.
 
-      #### Create file `retrieve-modify.php` for retrieving and modifying message history.
-
-  .step(data-title='How to retrieve and modify message history - 2', data-file='../retrieve-modify.php', data-highlight='16-21')
+  .step(data-title='How to retrieve and modify message read status - 2', data-file='../retrieve-modify.py', data-highlight='6-7')
     :markdown
-      ## How to retrieve and modify message history - 2
-
+      ### Retrieve and modify message read status - 2
       ---
+      Define the `dateFrom` value to read the message store
 
-      #### Get the list of messages.
+      * Here we set the parameter `dateFrom`, if we omit it, its value will by default be set to 24 hours ago.
 
-  .step(data-title='How to retrieve and modify message history - 3', data-file='../retrieve-modify.php', data-highlight='17-17')
+  .step(data-title='How to retrieve and modify message read status - 3', data-file='../retrieve-modify.py', data-highlight='8-14')
     :markdown
-      ## How to retrieve and modify message history - 3
-
+      ### Retrieve and modify message read status - 3
       ---
+      Get the `platform` instance from the `authentication.get_platform()` function.
 
-      #### Here we set the parameter `dateFrom`, if we omit it, its value will by default be set to 24 hours ago.
+      Call the `platform.get()` function to read the message store.
 
-  .step(data-title='How to retrieve and modify message history - 4', data-file='../retrieve-modify.php', data-highlight='23-28')
+      Get the records list and count of items.
+
+      Print the number of items in the records list.
+
+  .step(data-title='How to retrieve and modify message read status - 4', data-file='../retrieve-modify.py', data-highlight='15-22')
     :markdown
-      ## How to retrieve and modify message history - 4
-
+      ### Retrieve and modify message read status - 4
       ---
+      Iterate thru the `messages` list.
 
-      #### Update the read status of a message to "Read".
+      * Check if the message status is 'Read'.
 
+      * Get the `messageId` and call `platform.put()` to change the message status to "Unread".
 
-  .step(data-title='How to retrieve and modify message history - 5', data-file='../retrieve-modify.php', data-highlight='30-31')
+      * Catch the new message status and print the status.
+
+      ### Run the demo
+      $ python retrive-modify.py
+
+  .step(data-title='How to retrieve and delete a message', data-file='../retrieve-modify.py', data-highlight='24-25')
     :markdown
-      ## How to retrieve and modify message history - 5
-
+      ### How to retrieve and delete a message
       ---
+      Check if there is a message from the `messages` list.
 
-      #### Delete a message
+      Delete the first message.
+
+      Print the id of the message we just deleted.
+
+      ### Run the demo
+      $ python retrieve-modify.py
 
 .chapter(data-title='How to receive and reply to SMS messages')
-  .step(data-title='How to receive and reply to SMS messages - 1', data-file='../receive-reply.php')
+  .step(data-title='How to receive and reply to SMS messages - 1', data-file='../receive-reply.py', data-highlight='1-9')
     :markdown
-      ## How to receive and reply to SMS messages - 1
-
+      ### How to receive and reply to SMS messages - 1
       ---
+      Create a file `receive-reply.py` and import RingCentral Python SDK and utility libraries.
 
-      #### Create file `receive-reply.php` for receiving and replying messages.
 
-  .step(data-title='How to receive and reply to SMS messages - 2', data-file='../receive-reply.php', data-highlight='19-19')
+  .step(data-title='How to receive and reply to SMS messages - 2', data-file='../receive-reply.py', data-highlight='13-23')
     :markdown
-      ## How to receive and reply to SMS messages - 2
-
+      ### How to receive and reply to SMS messages - 2
       ---
+      Implement RingCentral platform authentication and get the `platform` instance
 
-      #### Create a subscription
+      Get the `fromNumber` which will be used later on for replying an incoming SMS message.
 
-  .step(data-title='How to receive and reply to SMS messages - 3', data-file='../receive-reply.php', data-highlight='20-20')
+  .step(data-title='How to receive and reply to SMS messages - 3', data-file='../receive-reply.py', data-highlight='27-30')
     :markdown
-      ## How to receive and reply to SMS messages - 3
-
+      ### How to receive and reply to SMS messages - 3
       ---
+      Implement the `pubnub()` function
 
-      #### Set event filters
+      * Get the `subscription` instance from the `sdk.create_subscription()`.
 
-      For a full list of available event filters, please refer to https://developer.ringcentral.com/api-docs/latest/index.html#!#EventTypes.html
+      * Add the SMS notification filter. For a full list of available event filters, please refer to https://developer.ringcentral.com/api-docs/latest/index.html#!#EventTypes.html
 
-  .step(data-title='How to receive and reply to SMS messages - 4', data-file='../receive-reply.php', data-highlight='21-31')
+      * Set the filter and event handler `on_message`
+
+      * Register the `subscription.register()`
+
+
+  .step(data-title='How to receive and reply to SMS messages - 4', data-file='../receive-reply.py', data-highlight='32-35')
     :markdown
-      ## How to receive and reply to SMS messages - 4
-
+      ### How to receive and reply to SMS messages - 4
       ---
+      Create a file named `subid.txt` and write the subscription id into the file.
 
-      #### Handle notification messsages
+      * We will read the subscription id every time we run the demo and use the id to delete the old subscription before creating a new one.
 
-      Here we just reply a message to the sender.
-
-  .step(data-title='How to receive and reply to SMS messages - 5', data-file='../receive-reply.php', data-highlight='32-33')
+  .step(data-title='How to receive and reply to SMS messages - 5', data-file='../receive-reply.py', data-highlight='44-51')
     :markdown
-      ## How to receive and reply to SMS messages - 5
-
+      ### How to receive and reply to SMS messages - 5
       ---
+      #### Handle notification messages.
 
-      #### Register the subscription
+      Get the phone number of the sender.
 
-  .step(data-title='How to receive and reply to SMS messages - 6', data-file='../receive-reply.php')
+      Use the `fromNumber` to reply the incoming SMS message.
+
+      Print the sent message id.
+
+  .step(data-title='How to receive and reply to SMS messages - 6', data-file='../receive-reply.py', data-highlight='53-64')
     :markdown
-      ## How to receive and reply to SMS messages - 6
+      ### How to receive and reply to SMS messages - 6
+      ---
+      Read the subscription id from the subid.txt file.
 
+      Call the `platform.delete()` to delete the old subscription.
+
+      * This is important because each extension can have up to max 20 subscriptions. When the limit is exceeded, you will get the 'Subscriptions limit exceeded' error message.
+
+      ### Run the demo
+      $ python receive-reply.py
+
+  .step(data-title='How to receive and reply to SMS messages - 7', data-file='../receive-reply.py')
+    :markdown
+      ### How to receive and reply to SMS messages - 7
       ---
 
       #### WebHook

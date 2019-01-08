@@ -1,7 +1,7 @@
 import authentication
+import time
 
-def sendMMSMessage(toNumber, attachment, message):
-    platform = authentication.get_platform()
+def send_mms_message(toNumber, attachment, message):
     sdk = authentication.get_sdk()
     builder = sdk.create_multipart_builder()
     builder.set_body({
@@ -12,17 +12,22 @@ def sendMMSMessage(toNumber, attachment, message):
     builder.add(attachment)
     try:
         request = builder.request('/account/~/extension/~/sms')
+        platform = authentication.get_platform()
         response = platform.send_request(request)
         response = platform.get("/account/~/extension/~/message-store/" + str(response.json().id));
-        print(response.json().messageStatus);
+        if response.json().messageStatus == 'Delivered':
+            print('Message was sent successfully')
+        elif response.json().messageStatus == 'Queued':
+            time.sleep(10)
+            track_status(messageId)
+        else:
+            print (response.json().messageStatus)
     except Exception as e:
         print (e)
 
 if __name__ == '__main__':
     image = open ('test.jpg', 'rb')
-    attachment = (
-        'test.jpg',
-        image,
-        'image/jpeg'
-        )
-    sendMMSMessage('16505130930', attachment, 'Test MMS message from Python')
+    attachment = ('test.jpg', image, 'image/jpeg')
+    toNumber = 'recipient phone number'
+    message = 'Test MMS message from Python'
+    send_mms_message(toNumber, attachment, message)

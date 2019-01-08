@@ -1,4 +1,4 @@
-# SMS API Python Quickstart
+# Messages API Python Quickstart
 
 [![Community][community-img]][community-url]
 [![Twitter][twitter-img]][twitter-url]
@@ -8,7 +8,7 @@
  [twitter-img]: https://img.shields.io/twitter/follow/ringcentraldevs.svg?style=social&label=follow
  [twitter-url]: https://twitter.com/RingCentralDevs
 
-A quickstart tutorial to teach users to use RingCentral SMS API. The following topics are included:
+A quickstart tutorial to teach users to use RingCentral Messages API. The following topics are included:
 
 - How to send SMS
 - How to send MMS
