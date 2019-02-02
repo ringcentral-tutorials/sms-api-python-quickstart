@@ -19,14 +19,9 @@ A quickstart tutorial to teach users to use RingCentral Messages API. The follow
 ### Clone - Setup - Run the project
 ```
 $ git clone https://github.com/ringcentral-tutorials/sms-api-python-quickstart
-
 $ cd sms-api-python-quickstart
-
-$ pip install ringcentral
-
-$ pip install python-dotenv
-
-$ cp dotenv .env
+$ python setup.py install
+$ cp .env-sampledotenv .env
 ```
 Specify your app client id and client secret as well as account login credentials to the .env file.
 

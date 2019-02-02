@@ -1,19 +1,30 @@
-import authentication
+from ringcentral import SDK
+import os
+from dotenv import load_dotenv
 
-def send_sms_message(toNumber, message):
-    params = {
-        'from': {'phoneNumber': authentication.get_phonenumber()},
-        'to': [{'phoneNumber': toNumber}],
-        'text': message
-        }
+load_dotenv(".env")
+
+sdk = SDK( os.getenv("RINGCENTRAL_CLIENT_ID"),
+           os.getenv("RINGCENTRAL_CLIENT_SECRET"),
+           os.getenv("RINGCENTRAL_SERVER_URL") )
+
+platform = sdk.platform()
+platform.login( os.getenv("RINGCENTRAL_USERNAME"),
+                os.getenv("RINGCENTRAL_EXTENSION"),
+                os.getenv("RINGCENTRAL_PASSWORD") )
+
+def send_sms_message( toNumber, message ):
     try:
-        platform = authentication.get_platform()
-        response = platform.post('/restapi/v1.0/account/~/extension/~/sms', params)
-        print(response.json().id)
+        response = platform.post('/restapi/v1.0/account/~/extension/~/sms', {
+            'from': {'phoneNumber': os.getenv("RINGCENTRAL_USERNAME")},
+            'to': [{'phoneNumber': toNumber}],
+            'text': message
+        })
+        print("Message ID: " + str(response.json().id))
     except Exception as e:
-        print (e)
+        print(e)
 
 if __name__ == '__main__':
-    toNumber = 'recipient phone number'
+    toNumber = os.getenv("RINGCENTRAL_RECEIVER")
     message = 'This is a test message from Python'
     send_sms_message(toNumber, message)

@@ -1,33 +1,47 @@
-import authentication
+from ringcentral import SDK
+import os
 import time
+from dotenv import load_dotenv
 
-def send_mms_message(toNumber, attachment, message):
-    sdk = authentication.get_sdk()
-    builder = sdk.create_multipart_builder()
-    builder.set_body({
-        'from': {'phoneNumber': authentication.get_phonenumber()},
-        'to': [{'phoneNumber': toNumber}],
-        'text': message
-        })
-    builder.add(attachment)
+load_dotenv(".env")
+
+sdk = SDK( os.getenv("RINGCENTRAL_CLIENT_ID"),
+           os.getenv("RINGCENTRAL_CLIENT_SECRET"),
+           os.getenv("RINGCENTRAL_SERVER_URL") )
+
+platform = sdk.platform()
+platform.login( os.getenv("RINGCENTRAL_USERNAME"),
+                os.getenv("RINGCENTRAL_EXTENSION"),
+                os.getenv("RINGCENTRAL_PASSWORD") )
+
+def check_status( messageId ):
+    response = platform.get("/account/~/extension/~/message-store/" + str(messageId));
+    return response.json().messageStatus
+
+def send_sms_message( toNumber, message ):
     try:
-        request = builder.request('/account/~/extension/~/sms')
-        platform = authentication.get_platform()
-        response = platform.send_request(request)
+        response = platform.post('/restapi/v1.0/account/~/extension/~/sms', {
+            'from': {'phoneNumber': os.getenv("RINGCENTRAL_USERNAME")},
+            'to': [{'phoneNumber': toNumber}],
+            'text': message
+        })
+        messageId = response.json().id
+        print("Message ID: " + str(messageId))
         response = platform.get("/account/~/extension/~/message-store/" + str(response.json().id));
-        if response.json().messageStatus == 'Delivered':
+        status = check_status( response.json().id )
+        if status == 'Delivered':
             print('Message was sent successfully')
-        elif response.json().messageStatus == 'Queued':
-            time.sleep(10)
-            track_status(messageId)
+        elif status == 'Queued':
+            print("Message is queued. Will check again in 5 seconds...")
+            time.sleep(5)
+            print("New status is " + check_status(messageId))
         else:
-            print (response.json().messageStatus)
+            print( status )
+
     except Exception as e:
-        print (e)
+        print(e)
 
 if __name__ == '__main__':
-    image = open ('test.jpg', 'rb')
-    attachment = ('test.jpg', image, 'image/jpeg')
-    toNumber = 'recipient phone number'
-    message = 'Test MMS message from Python'
-    send_mms_message(toNumber, attachment, message)
+    toNumber = os.getenv("RINGCENTRAL_RECEIVER")
+    message = 'This is a test message from Python'
+    send_sms_message(toNumber, message)

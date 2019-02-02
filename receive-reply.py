@@ -4,23 +4,20 @@ from ringcentral.subscription import Events
 from ringcentral import SDK
 
 import os
-from dotenv import Dotenv
-dotenv = Dotenv(".env")
-os.environ.update(dotenv)
+from dotenv import load_dotenv
 
+load_dotenv(".env")
+
+sdk = SDK( os.getenv("RINGCENTRAL_CLIENT_ID"),
+           os.getenv("RINGCENTRAL_CLIENT_SECRET"),
+           os.getenv("RINGCENTRAL_SERVER_URL") )
+
+platform = sdk.platform()
+platform.login( os.getenv("RINGCENTRAL_USERNAME"),
+                os.getenv("RINGCENTRAL_EXTENSION"),
+                os.getenv("RINGCENTRAL_PASSWORD") )
 
 def main():
-    fromNumber = ""
-    if os.getenv("ENVIRONMENT_MODE") == "sandbox":
-        sdk = SDK(os.getenv("CLIENT_ID_SB"), os.getenv("CLIENT_SECRET_SB"), 'https://platform.devtest.ringcentral.com')
-        platform = sdk.platform()
-        platform.login(os.getenv("USERNAME_SB"), '', os.getenv("PASSWORD_SB"))
-        fromNumber = os.getenv("USERNAME_SB")
-    else:
-        sdk = SDK(os.getenv("CLIENT_ID_PROD"), os.getenv("CLIENT_SECRET_PROD"), 'https://platform.ringcentral.com')
-        platform = sdk.platform()
-        platform.login(os.getenv("USERNAME_PROD"), '', os.getenv("PASSWORD_PROD"))
-        fromNumber = os.getenv("USERNAME_PROD")
 
     def pubnub():
         try:
@@ -43,10 +40,10 @@ def main():
 
     def on_message(msg):
         senderNumber = msg['body']['from']['phoneNumber']
-        response = platform.post('/account/~/extension/~/sms', {
-             'from' : {'phoneNumber' : fromNumber},
-             'to' : [{'phoneNumber' : senderNumber}],
-             'text' : 'This is an automatic reply'
+        response = platform.post('/restapi/v1.0/account/~/extension/~/sms', {
+            'from': {'phoneNumber': os.getenv("RINGCENTRAL_USERNAME")},
+            'to': [{'phoneNumber': senderNumber}],
+            'text' : 'This is an automatic reply'
         })
         print('SMS replied: %d' % (response.json().id))
 
