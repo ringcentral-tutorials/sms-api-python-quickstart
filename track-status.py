@@ -27,7 +27,6 @@ def send_sms_message( toNumber, message ):
         })
         messageId = response.json().id
         print("Message ID: " + str(messageId))
-        response = platform.get("/account/~/extension/~/message-store/" + str(response.json().id));
         status = check_status( response.json().id )
         if status == 'Delivered':
             print('Message was sent successfully')
