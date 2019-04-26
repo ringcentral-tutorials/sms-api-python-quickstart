@@ -19,19 +19,20 @@ def retrieve_modify():
     lessXXDays = time.time() - (84600 * 1)
     dateFrom = datetime.datetime.fromtimestamp(lessXXDays).strftime("%Y-%m-%dT00:00:00.000Z")
     response = platform.get('/account/~/extension/~/message-store', {
-        'dateFrom' : dateFrom
+        'dateFrom' : dateFrom,
+        'readStatus' : "Read"
     })
     messages = response.json().records
     count = len(messages)
     print ("We get a list of %d messages" % (count))
-    messageId = messages[0].id
-    response = platform.put("/account/~/extension/~/message-store/%d" % (messageId), {
-        'readStatus' : 'Unread'
-    });
-    readStatus = response.json().readStatus
-    print("Message status has been changed to " + readStatus)
-
     if count:
+        messageId = messages[0].id
+        response = platform.put("/account/~/extension/~/message-store/%d" % (messageId), {
+            'readStatus' : 'Unread'
+            });
+        readStatus = response.json().readStatus
+        print("Message status has been changed to " + readStatus)
+
         response = platform.delete("/account/~/extension/~/message-store/%d" % (messages[0].id))
         print("Message %d has been deleted" % (messages[0].id))
 
