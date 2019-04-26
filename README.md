@@ -1,4 +1,12 @@
-# Messages API Python Quickstart
+# SMS Application Walk-through
+
+Welcome to the SMS Application Walk-through and tour of a fully functional SMS application powered by RingCentral. In this walk through you will learn:
+
+* How to send a SMS message.
+* How to send an MMS message
+* How to track the delivery status of a message.
+* How to modify the message status.
+* How to reply to an SMS message.
 
 [![Community][community-img]][community-url]
 [![Twitter][twitter-img]][twitter-url]
@@ -8,18 +16,11 @@
  [twitter-img]: https://img.shields.io/twitter/follow/ringcentraldevs.svg?style=social&label=follow
  [twitter-url]: https://twitter.com/RingCentralDevs
 
-A quickstart tutorial to teach users to use RingCentral Messages API. The following topics are included:
-
-- How to send SMS
-- How to send MMS
-- How to track delivery status of messages
-- How to retrieve and modify message history
-- How to receive and reply to SMS messages
 
 ### Clone - Setup - Run the project
 ```
-$ git clone https://github.com/ringcentral-tutorials/sms-api-python-quickstart
-$ cd sms-api-python-quickstart
+$ git clone https://github.com/ringcentral-tutorials/sms-api-python-demo
+$ cd sms-api-python-demo
 $ python setup.py install
 $ cp .env-sampledotenv .env
 ```
@@ -35,9 +36,13 @@ $ python send-mms.py
 ```
 #### How to track delivery status of messages
 ```
-$ python tract-status.py
+$ python track-status.py
 ```
-#### How to retrieve and modify message history
+#### How to retrieve and modify message status
+```
+$ python retrieve-modify.py
+```
+#### How to delete a message
 ```
 $ python retrieve-modify.py
 ```
